@@ -13,7 +13,7 @@ namespace WiFiReconnecter
 
         public WiFiReconnecter(Wifi oWiFi = null)
         {
-            Console.WriteLine("WiFi Reconnecter service running...");
+            WriteToConsole(ConsoleType.ServiceStart);
             WiFi = oWiFi ?? new Wifi();
             oAPs = WiFi?.GetAccessPoints();
             oAP = oAPs.Where(x => x.IsConnected)?.FirstOrDefault();
@@ -22,7 +22,7 @@ namespace WiFiReconnecter
                 return;
 
             WiFi.ConnectionStatusChanged += WiFi_ConnectionStatusChanged;
-            Console.WriteLine("WiFi is connected!");
+            WriteToConsole(ConsoleType.WiFiConnected);
         }
 
         public Wifi WiFi { get; set; }
@@ -46,11 +46,11 @@ namespace WiFiReconnecter
                 {
                     if(!x)
                     {
-                        Console.WriteLine("Reconnection problem! Trying again in 1 minute...");
+                        WriteToConsole(ConsoleType.WiFiReconnectionProblem);
                         Reconnect(TimeSpan.FromMinutes(1));
                     }
                     else
-                        Console.WriteLine("reconnected");
+                        WriteToConsole(ConsoleType.WiFiReconnected);
                 }); 
             }
         }
@@ -61,12 +61,25 @@ namespace WiFiReconnecter
 
             if(oAP == null)
             {
-                Console.WriteLine("Not connected to a wifi access point and can't connect to one. Service stopped.");
+                WriteToConsole(ConsoleType.ServiceStop);
                 return true;
             }
 
             Reconnect();
             return false;
+        }
+
+        private void WriteToConsole(ConsoleType eType)
+        {
+            var TimeStamp = DateTime.Now.ToLocalTime().ToLongTimeString();
+            switch(eType)
+            {
+                case ConsoleType.ServiceStart: Console.WriteLine($"{TimeStamp}: WiFi Reconnecter service started...");  break;
+                case ConsoleType.ServiceStop: Console.WriteLine($"{TimeStamp}: Not connected to a wifi access point and can't connect to one. Service stopped."); break;
+                case ConsoleType.WiFiConnected: Console.WriteLine($"{TimeStamp}: WiFi is connected!");  break;
+                case ConsoleType.WiFiReconnected: Console.WriteLine($"{TimeStamp}: WiFi reconnected"); break;
+                case ConsoleType.WiFiReconnectionProblem: Console.WriteLine($"{TimeStamp}: Reconnection problem! Trying again in 1 minute..."); break;
+            }
         }
     }
 }
