@@ -71,7 +71,8 @@ namespace WiFiReconnecter
 
         private void WriteToConsole(ConsoleType eType)
         {
-            var TimeStamp = DateTime.Now.ToLocalTime().ToLongTimeString();
+            var Now = DateTime.Now.ToLocalTime();
+            var TimeStamp = $"{Now.ToShortDateString()} - {Now.ToLongTimeString()}";
             switch(eType)
             {
                 case ConsoleType.ServiceStart: Console.WriteLine($"{TimeStamp}: WiFi Reconnecter service started...");  break;
