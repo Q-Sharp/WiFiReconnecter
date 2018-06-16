@@ -71,16 +71,7 @@ namespace WiFiReconnecter
 
         private void WriteToConsole(ConsoleType eType)
         {
-            var Now = DateTime.Now.ToLocalTime();
-            var TimeStamp = $"{Now.ToShortDateString()} - {Now.ToLongTimeString()}";
-            switch(eType)
-            {
-                case ConsoleType.ServiceStart: Console.WriteLine($"{TimeStamp}: WiFi Reconnecter service started...");  break;
-                case ConsoleType.ServiceStop: Console.WriteLine($"{TimeStamp}: Not connected to a wifi access point and can't connect to one. Service stopped."); break;
-                case ConsoleType.WiFiConnected: Console.WriteLine($"{TimeStamp}: WiFi is connected!");  break;
-                case ConsoleType.WiFiReconnected: Console.WriteLine($"{TimeStamp}: WiFi reconnected"); break;
-                case ConsoleType.WiFiReconnectionProblem: Console.WriteLine($"{TimeStamp}: Reconnection problem! Trying again in 1 minute..."); break;
-            }
+            Console.WriteLine(eType.GetConsoleTypeString());
         }
     }
 }
